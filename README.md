@@ -4,62 +4,48 @@
   ✨ Auto Update từ Pastebin
 ]]
 
--- 📁 File lưu pass: /sdcard/.gg_pass.dat (ẩn)
-local PASSWORD = "123456"  -- 👉 Đặt mật khẩu ở đây
-local SAVE_FILE = "/sdcard/.gg_pass.dat"
+--hàm mật khẩu cho th nào cần : local file = "/storage/emulated/0/pass.txt"
+local correct_pass = "123456" -- thay mật khẩu tại đây
 
--- 🔒 Encode Base64 để "ẩn" nội dung file
-local function encode(str)
-    return (str:gsub(".", function(c)
-        return string.format("%02X", string.byte(c))
-    end))
+-- Hàm kiểm tra file tồn tại
+local function fileExists(path)
+  local f = io.open(path, "r")
+  if f then f:close() return true else return false end
 end
 
-local function decode(hex)
-    return (hex:gsub("..", function(cc)
-        return string.char(tonumber(cc, 16))
-    end))
+-- Hàm ghi mật khẩu mới
+local function writePassword(pass)
+  local f = io.open(file, "w")
+  f:write(pass)
+  f:close()
 end
 
--- 🧠 Đọc pass đã lưu
-local function isPasswordSaved()
-    local f = io.open(SAVE_FILE, "r")
-    if not f then return false end
-    local saved = f:read("*a")
-    f:close()
-    return decode(saved) == PASSWORD
+-- Hàm đọc mật khẩu đã lưu
+local function readPassword()
+  local f = io.open(file, "r")
+  local data = f:read("*a")
+  f:close()
+  return data
 end
 
--- 💾 Lưu pass đúng
-local function savePassword()
-    local f = io.open(SAVE_FILE, "w")
-    f:write(encode(PASSWORD))
-    f:close()
-end
-
-local function checkPassword()
-    if isPasswordSaved() then return true end
-
-    for i = 1, 3 do
-        local input = gg.prompt({"🔐 Nhập mật khẩu"}, nil, {"text"})
-        if not input then
-            gg.alert("🚫 Hủy thao tác.")
-            os.exit()
-        elseif input[1] == PASSWORD then
-            gg.toast("✅ Mật khẩu chính xác.")
-            savePassword()
-            return true
-        else
-            gg.alert("❌ Sai mật khẩu! (" .. i .. "/3)")
-        end
-    end
-
-    gg.alert("🚫 Nhập sai quá số lần cho phép!")
+-- Nếu chưa có file, yêu cầu nhập và lưu mật khẩu
+if not fileExists(file) then
+  local input = gg.prompt({"Nhập mật khẩu:"}, {""})[1]
+  if not input or input == "" then
+    gg.alert("Không nhập mật khẩu. Thoát.")
     os.exit()
+  end
+  writePassword(input)
 end
 
--- 👉 Gọi hàm kiểm tra khi mở script
+-- Đọc mật khẩu từ file và kiểm tra
+local saved_pass = readPassword()
+if saved_pass ~= correct_pass then
+  gg.alert("Sai mật khẩu! Script dừng lại.")
+  os.exit()
+end
 
+gg.alert("✅ Đăng nhập thành công!")
 
 local CURRENT_VERSION = "1.6"
 local UPDATE_URL = "https://raw.githubusercontent.com/0908849165h/auto-update-/refs/heads/main/README.md"
