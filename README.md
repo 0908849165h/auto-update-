@@ -33,26 +33,62 @@ function downloadUpdate()
     end
 end
 
--- 🔐 PASSWORD
-local PASSWORD = "vip123"
-local MAX_ATTEMPTS = 3
+-- 📁 File lưu pass: /sdcard/.gg_pass.dat (ẩn)
+local PASSWORD = "123456"  -- 👉 Đặt mật khẩu ở đây
+local SAVE_FILE = "/sdcard/.gg_pass.dat"
 
-function passwordCheck()
-    for i = 1, MAX_ATTEMPTS do
-        local input = gg.prompt({"🔐 Nhập mật khẩu để sử dụng script:"}, nil, {"text"})
+-- 🔒 Encode Base64 để "ẩn" nội dung file
+local function encode(str)
+    return (str:gsub(".", function(c)
+        return string.format("%02X", string.byte(c))
+    end))
+end
+
+local function decode(hex)
+    return (hex:gsub("..", function(cc)
+        return string.char(tonumber(cc, 16))
+    end))
+end
+
+-- 🧠 Đọc pass đã lưu
+local function isPasswordSaved()
+    local f = io.open(SAVE_FILE, "r")
+    if not f then return false end
+    local saved = f:read("*a")
+    f:close()
+    return decode(saved) == PASSWORD
+end
+
+-- 💾 Lưu pass đúng
+local function savePassword()
+    local f = io.open(SAVE_FILE, "w")
+    f:write(encode(PASSWORD))
+    f:close()
+end
+
+local function checkPassword()
+    if isPasswordSaved() then return true end
+
+    for i = 1, 3 do
+        local input = gg.prompt({"🔐 Nhập mật khẩu"}, nil, {"text"})
         if not input then
-            gg.alert("❌ Đã hủy.")
+            gg.alert("🚫 Hủy thao tác.")
             os.exit()
         elseif input[1] == PASSWORD then
-            gg.toast("🔓 Mật khẩu đúng.")
-            return
+            gg.toast("✅ Mật khẩu chính xác.")
+            savePassword()
+            return true
         else
-            gg.alert("❌ Sai! Còn lại: " .. (MAX_ATTEMPTS - i))
+            gg.alert("❌ Sai mật khẩu! (" .. i .. "/3)")
         end
     end
-    gg.alert("🔒 Khóa script do nhập sai quá nhiều.")
+
+    gg.alert("🚫 Nhập sai quá số lần cho phép!")
     os.exit()
 end
+
+-- 👉 Gọi hàm kiểm tra khi mở script
+checkPassword()
 
 -- 🎨 LOGO
 function showLogo()
