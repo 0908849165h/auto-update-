@@ -1,5 +1,5 @@
 --[[
-  🔰 GG SCRIPT PRO UI v1.5 🔰
+  🔰 GG SCRIPT PRO UI v1 🔰
   📅 2025-08-04
   ✨ Auto Update từ Pastebin
 ]]
