@@ -4,35 +4,6 @@
   ✨ Auto Update từ Pastebin
 ]]
 
-local CURRENT_VERSION = "1.5"
-local UPDATE_URL = "https://raw.githubusercontent.com/chatgpt-helper/gg-auto-update-script/main/ggscript.lua"
-
--- 🔁 AUTO UPDATE
-function downloadUpdate()
-    if not gg.makeRequest then
-        gg.alert("❌ Phiên bản Game Guardian không hỗ trợ cập nhật.")
-        return
-    end
-    local resp = gg.makeRequest(UPDATE_URL)
-    if not resp or resp.code ~= 200 then
-        gg.toast("⚠️ Không thể kết nối để kiểm tra cập nhật.")
-        return
-    end
-    local data = resp.content
-    local newVer = data:match('CURRENT_VERSION%s*=%s*"(.-)"')
-    if newVer and newVer ~= CURRENT_VERSION then
-        local tmp = gg.getFile():gsub("%.lua$", "_updated.lua")
-        local f = io.open(tmp, "w")
-        f:write(data)
-        f:close()
-        gg.alert("🆕 Có bản cập nhật mới: v" .. newVer .. "\nScript sẽ khởi động lại.")
-        dofile(tmp)
-        os.exit()
-    else
-        gg.toast("✅ Bạn đang dùng phiên bản mới nhất ("..CURRENT_VERSION..")")
-    end
-end
-
 -- 📁 File lưu pass: /sdcard/.gg_pass.dat (ẩn)
 local PASSWORD = "123456"  -- 👉 Đặt mật khẩu ở đây
 local SAVE_FILE = "/sdcard/.gg_pass.dat"
@@ -89,6 +60,35 @@ end
 
 -- 👉 Gọi hàm kiểm tra khi mở script
 checkPassword()
+
+local CURRENT_VERSION = "1.6"
+local UPDATE_URL = "https://raw.githubusercontent.com/0908849165h/auto-update-/refs/heads/main/README.md"
+
+-- 🔁 AUTO UPDATE
+function downloadUpdate()
+    if not gg.makeRequest then
+        gg.alert("❌ Phiên bản Game Guardian không hỗ trợ cập nhật.")
+        return
+    end
+    local resp = gg.makeRequest(UPDATE_URL)
+    if not resp or resp.code ~= 200 then
+        gg.toast("⚠️ Không thể kết nối để kiểm tra cập nhật.")
+        return
+    end
+    local data = resp.content
+    local newVer = data:match('CURRENT_VERSION%s*=%s*"(.-)"')
+    if newVer and newVer ~= CURRENT_VERSION then
+        local tmp = gg.getFile():gsub("%.lua$", "_updated.lua")
+        local f = io.open(tmp, "w")
+        f:write(data)
+        f:close()
+        gg.alert("🆕 Có bản cập nhật mới: v" .. newVer .. "\nScript sẽ khởi động lại.")
+        dofile(tmp)
+        os.exit()
+    else
+        gg.toast("✅ Bạn đang dùng phiên bản mới nhất ("..CURRENT_VERSION..")")
+    end
+end
 
 -- 🎨 LOGO
 function showLogo()
