@@ -4,7 +4,7 @@
   ✨ Auto Update từ Pastebin
 ]]
 
---hàm mật khẩu cho th nào cần : local file = "/storage/emulated/0/pass.txt"
+local file ="/storage/emulated/0/pass.txt"
 local correct_pass = "123456" -- thay mật khẩu tại đây
 
 -- Hàm kiểm tra file tồn tại
