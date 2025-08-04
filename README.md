@@ -59,7 +59,7 @@ local function checkPassword()
 end
 
 -- 👉 Gọi hàm kiểm tra khi mở script
-checkPassword()
+
 
 local CURRENT_VERSION = "1.6"
 local UPDATE_URL = "https://raw.githubusercontent.com/0908849165h/auto-update-/refs/heads/main/README.md"
@@ -232,7 +232,6 @@ function exitScript()
 end
 
 -- 🚀 CHẠY SCRIPT
-passwordCheck()
 showLogo()
 downloadUpdate()
 
