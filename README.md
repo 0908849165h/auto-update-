@@ -47,7 +47,7 @@ end
 
 gg.alert("✅ Đăng nhập thành công!")
 
-local CURRENT_VERSION = "1.6"
+local CURRENT_VERSION = "1"
 local UPDATE_URL = "https://raw.githubusercontent.com/0908849165h/auto-update-/refs/heads/main/README.md"
 
 -- 🔁 AUTO UPDATE
